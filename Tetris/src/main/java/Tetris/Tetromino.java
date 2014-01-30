@@ -1,25 +1,25 @@
-package main;
+package Tetris;
+
+import Tetris.DataTypes.*;
 
 public class Tetromino {
 
-    private int type;
+    private TetrominoType type;
     private int orientation;
     private Coordinate centerPoint;
-
     private Coordinate[] blockCoordinates;
     private Playfield playfield;
 
-    public Tetromino(int type, Playfield p) {
+    public Tetromino(TetrominoType type, Playfield p) {
 
-        if (type < 0 || type > 6) this.type = 0;
-        else this.type = type;
-
+        this.type = type;
         this.orientation = 0;
         this.centerPoint = new Coordinate(5, 19);
 
         this.blockCoordinates = new Coordinate[4];
         for (int i=0; i<4; i++) this.blockCoordinates[i] = new Coordinate(0, 0);
         updateBlockCoordinates();
+
         this.playfield = p;
     }
 
@@ -27,10 +27,13 @@ public class Tetromino {
 
         int blockNumber, relX, relY;
 
+        int[][] relativeXcoordinates = BlockCoordinates.getRelativeXcoordinates(this.type);
+        int[][] relativeYcoordinates = BlockCoordinates.getRelativeYcoordinates(this.type);
+
         for (blockNumber=0; blockNumber<4; blockNumber++) {
 
-            relX = TetrominoCoordinates.relativeXcoordinates[this.type][this.orientation][blockNumber];
-            relY = TetrominoCoordinates.relativeYcoordinates[this.type][this.orientation][blockNumber];
+            relX = relativeXcoordinates[this.orientation][blockNumber];
+            relY = relativeYcoordinates[this.orientation][blockNumber];
 
             this.blockCoordinates[blockNumber].x = this.centerPoint.x + relX;
             this.blockCoordinates[blockNumber].y = this.centerPoint.y + relY;
@@ -140,7 +143,18 @@ public class Tetromino {
         return coordinates;
     }
 
-    public int getType() {
-        return this.type;
+    public BlockType getType() {
+
+        switch (this.type) {
+            case I: return BlockType.I;
+            case J: return BlockType.J;
+            case L: return BlockType.L;
+            case O: return BlockType.O;
+            case S: return BlockType.S;
+            case T: return BlockType.T;
+            case Z: return BlockType.Z;
+        }
+
+        return BlockType.Z;
     }
 }

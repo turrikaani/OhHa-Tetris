@@ -1,4 +1,4 @@
-package main;
+package Tetris.Keyboard;
 
 public class KeyboardFrontend {
 

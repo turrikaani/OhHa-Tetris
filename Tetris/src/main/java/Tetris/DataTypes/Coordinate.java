@@ -1,4 +1,4 @@
-package main;
+package Tetris.DataTypes;
 
 public class Coordinate {
 

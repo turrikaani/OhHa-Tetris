@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package main;
+package Tetris;
 
+import Tetris.DataTypes.*;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -46,29 +47,29 @@ public class PlayfieldTest {
     public void newPlayfieldIsEmpty() {
         for (int y=0; y<22; y++) {
             for (int x=0; x<10; x++) {
-                assertEquals(0, this.playfield.getCellType(x, y));
+                assertEquals(BlockType.EMPTY, this.playfield.getCellType(x, y));
             }
         }
     }
 
     @Test
     public void methodReserveCellWorks() {
-        this.playfield.reserveCellForBlock(5, 5, 4);
-        assertEquals(4, this.playfield.getCellType(5, 5));
+        this.playfield.reserveCellForBlock(5, 5, BlockType.I);
+        assertEquals(BlockType.I, this.playfield.getCellType(5, 5));
     }
 
     @Test
     public void accessingGridOutOfBounds() {
-        this.playfield.reserveCellForBlock(10, 0, 1);
-        this.playfield.reserveCellForBlock(0, 22, 2);
-        this.playfield.getCellType(10, 0);
-        this.playfield.getCellType(0, 22);
+        this.playfield.reserveCellForBlock(10, 0, BlockType.J);
+        this.playfield.reserveCellForBlock(0, 22, BlockType.L);
+        assertEquals(BlockType.I, this.playfield.getCellType(10, 0));
+        assertEquals(BlockType.I, this.playfield.getCellType(0, 22));
     }
 
     @Test
     public void methodGetFullRowsWorks() {
         for (int i=0; i<10; i++) {
-            this.playfield.reserveCellForBlock(i, 8, 1);
+            this.playfield.reserveCellForBlock(i, 8, BlockType.Z);
         }
         List<Integer> rivit = this.playfield.getListOfFullRows();
         assertEquals(1, rivit.size());
@@ -78,11 +79,13 @@ public class PlayfieldTest {
     @Test
     public void methodClearRowWorks() {
         for (int i=0; i<10; i++) {
-            this.playfield.reserveCellForBlock(i, 8, 1);
+            this.playfield.reserveCellForBlock(i, 8, BlockType.S);
         }
+        assertEquals(BlockType.S, this.playfield.getCellType(8, 8));
+
         this.playfield.clearRow(8);
         List<Integer> rivit = this.playfield.getListOfFullRows();
         assertEquals(0, rivit.size());
-        assertEquals(0, this.playfield.getCellType(8, 8));
+        assertEquals(BlockType.EMPTY, this.playfield.getCellType(8, 8));
     }
 }

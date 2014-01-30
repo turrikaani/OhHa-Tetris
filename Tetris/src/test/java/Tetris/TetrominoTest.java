@@ -4,8 +4,9 @@
  * and open the template in the editor.
  */
 
-package main;
+package Tetris;
 
+import Tetris.DataTypes.*;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,7 +37,7 @@ public class TetrominoTest {
     @Before
     public void setUp() {
         this.playfield = new Playfield();
-        this.tetromino = new Tetromino(0, this.playfield);
+        this.tetromino = new Tetromino(TetrominoType.I, this.playfield);
     }
     
     @After

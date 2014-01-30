@@ -1,4 +1,4 @@
-package main;
+package Tetris.Keyboard;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -53,14 +53,14 @@ public class KeyboardStatus implements KeyListener {
     }
 
     public boolean getRotationKey1Status() {
-        return rotationKey1Down;
+        return this.rotationKey1Down;
     }
 
     public boolean getRotationKey2Status() {
-        return rotationKey2Down;
+        return this.rotationKey2Down;
     }
 
     public boolean getPauseKeyStatus() {
-        return pauseKeyDown;
+        return this.pauseKeyDown;
     }
 }
