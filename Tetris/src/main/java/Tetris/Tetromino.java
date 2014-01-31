@@ -143,18 +143,16 @@ public class Tetromino {
         return coordinates;
     }
 
-    public BlockType getType() {
+    public BlockType getBlockType() {
 
         switch (this.type) {
-            case I: return BlockType.I;
-            case J: return BlockType.J;
-            case L: return BlockType.L;
-            case O: return BlockType.O;
-            case S: return BlockType.S;
-            case T: return BlockType.T;
-            case Z: return BlockType.Z;
+            case I : return BlockType.I;
+            case J : return BlockType.J;
+            case L : return BlockType.L;
+            case O : return BlockType.O;
+            case S : return BlockType.S;
+            case T : return BlockType.T;
+            default: return BlockType.Z;
         }
-
-        return BlockType.Z;
     }
 }
