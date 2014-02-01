@@ -46,7 +46,7 @@ public class Tetromino2ndTest {
 
     @Test
     public void rotateClockwiseByOne() {
-        this.tetromino.rotateClockwise();
+        boolean noCollision = this.tetromino.rotateClockwise();
         Coordinate[] blocks = this.tetromino.getBlockCoordinates();
         assertEquals(5, blocks[0].x);
         assertEquals(5, blocks[1].x);
@@ -56,6 +56,7 @@ public class Tetromino2ndTest {
         assertEquals(20, blocks[1].y);
         assertEquals(19, blocks[2].y);
         assertEquals(18, blocks[3].y);
+        assertEquals(true, noCollision);
     }
 
     @Test
@@ -103,7 +104,7 @@ public class Tetromino2ndTest {
 
     @Test
     public void rotateCounterclockwiseByOne() {
-        this.tetromino.rotateCounterclockwise();
+        boolean noCollision = this.tetromino.rotateCounterclockwise();
         Coordinate[] blocks = this.tetromino.getBlockCoordinates();
         assertEquals(5, blocks[0].x);
         assertEquals(5, blocks[1].x);
@@ -113,6 +114,7 @@ public class Tetromino2ndTest {
         assertEquals(19, blocks[1].y);
         assertEquals(20, blocks[2].y);
         assertEquals(21, blocks[3].y);
+        assertEquals(true, noCollision);
     }
 
     @Test
@@ -161,7 +163,7 @@ public class Tetromino2ndTest {
     @Test
     public void rotateClockwiseByOneWithObstacle() {
         this.playfield.reserveCellForBlock(5, 18, BlockType.S);
-        this.tetromino.rotateClockwise();
+        boolean noCollision = this.tetromino.rotateClockwise();
         Coordinate[] blocks = this.tetromino.getBlockCoordinates();
         assertEquals(3, blocks[0].x);
         assertEquals(4, blocks[1].x);
@@ -171,12 +173,13 @@ public class Tetromino2ndTest {
         assertEquals(19, blocks[1].y);
         assertEquals(19, blocks[2].y);
         assertEquals(19, blocks[3].y);
+        assertEquals(false, noCollision);
     }
 
     @Test
     public void rotateCounterclockwiseByOneWithObstacle() {
         this.playfield.reserveCellForBlock(5, 18, BlockType.S);
-        this.tetromino.rotateCounterclockwise();
+        boolean noCollision = this.tetromino.rotateCounterclockwise();
         Coordinate[] blocks = this.tetromino.getBlockCoordinates();
         assertEquals(3, blocks[0].x);
         assertEquals(4, blocks[1].x);
@@ -186,11 +189,12 @@ public class Tetromino2ndTest {
         assertEquals(19, blocks[1].y);
         assertEquals(19, blocks[2].y);
         assertEquals(19, blocks[3].y);
+        assertEquals(false, noCollision);
     }
 
     @Test
     public void stepTetrominoDownByOne() {
-        this.tetromino.stepDown();
+        boolean noCollision = this.tetromino.stepDown();
         Coordinate[] blocks = this.tetromino.getBlockCoordinates();
         assertEquals(3, blocks[0].x);
         assertEquals(4, blocks[1].x);
@@ -200,11 +204,13 @@ public class Tetromino2ndTest {
         assertEquals(18, blocks[1].y);
         assertEquals(18, blocks[2].y);
         assertEquals(18, blocks[3].y);
+        assertEquals(true, noCollision);
     }
 
     @Test
     public void stepTetrominoDownByTwenty() {
-        for (int i=0; i<20; i++) this.tetromino.stepDown();
+        boolean noCollision = true;
+        for (int i=0; i<20; i++) noCollision = this.tetromino.stepDown();
         Coordinate[] blocks = this.tetromino.getBlockCoordinates();
         assertEquals(3, blocks[0].x);
         assertEquals(4, blocks[1].x);
@@ -214,11 +220,12 @@ public class Tetromino2ndTest {
         assertEquals(0, blocks[1].y);
         assertEquals(0, blocks[2].y);
         assertEquals(0, blocks[3].y);
+        assertEquals(false, noCollision);
     }
 
     @Test
     public void stepTetrominoRightByOne() {
-        this.tetromino.stepRight();
+        boolean noCollision = this.tetromino.stepRight();
         Coordinate[] blocks = this.tetromino.getBlockCoordinates();
         assertEquals(4, blocks[0].x);
         assertEquals(5, blocks[1].x);
@@ -228,11 +235,13 @@ public class Tetromino2ndTest {
         assertEquals(19, blocks[1].y);
         assertEquals(19, blocks[2].y);
         assertEquals(19, blocks[3].y);
+        assertEquals(true, noCollision);
     }
 
     @Test
     public void stepTetrominoRightByTwenty() {
-        for (int i=0; i<20; i++) this.tetromino.stepRight();
+        boolean noCollision = true;
+        for (int i=0; i<20; i++) noCollision = this.tetromino.stepRight();
         Coordinate[] blocks = this.tetromino.getBlockCoordinates();
         assertEquals(6, blocks[0].x);
         assertEquals(7, blocks[1].x);
@@ -242,11 +251,12 @@ public class Tetromino2ndTest {
         assertEquals(19, blocks[1].y);
         assertEquals(19, blocks[2].y);
         assertEquals(19, blocks[3].y);
+        assertEquals(false, noCollision);
     }
 
     @Test
     public void stepTetrominoLeftByOne() {
-        this.tetromino.stepLeft();
+        boolean noCollision = this.tetromino.stepLeft();
         Coordinate[] blocks = this.tetromino.getBlockCoordinates();
         assertEquals(2, blocks[0].x);
         assertEquals(3, blocks[1].x);
@@ -256,11 +266,13 @@ public class Tetromino2ndTest {
         assertEquals(19, blocks[1].y);
         assertEquals(19, blocks[2].y);
         assertEquals(19, blocks[3].y);
+        assertEquals(true, noCollision);
     }
 
     @Test
     public void stepTetrominoLeftByTwenty() {
-        for (int i=0; i<20; i++) this.tetromino.stepLeft();
+        boolean noCollision = true;
+        for (int i=0; i<20; i++) noCollision = this.tetromino.stepLeft();
         Coordinate[] blocks = this.tetromino.getBlockCoordinates();
         assertEquals(0, blocks[0].x);
         assertEquals(1, blocks[1].x);
@@ -270,6 +282,7 @@ public class Tetromino2ndTest {
         assertEquals(19, blocks[1].y);
         assertEquals(19, blocks[2].y);
         assertEquals(19, blocks[3].y);
+        assertEquals(false, noCollision);
     }
 
     @Test
