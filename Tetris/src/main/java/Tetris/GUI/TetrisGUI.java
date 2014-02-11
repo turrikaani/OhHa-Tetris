@@ -21,17 +21,17 @@ public class TetrisGUI implements Runnable {
     public void run() {
 
         this.window = new JFrame("jTetris 1.0");
-        this.window.setPreferredSize(new Dimension(960, 640));
         this.window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.window.setResizable(false);
 
         this.backBuffer = new BufferedImage(960, 640, BufferedImage.TYPE_INT_ARGB);
         this.frontBuffer = new CustomPanel(this.backBuffer);
 
+        this.frontBuffer.setPreferredSize(new Dimension(960, 640));
         this.frontBuffer.setBackground(Color.BLACK);
         this.frontBuffer.setDoubleBuffered(false);
-        this.window.getContentPane().add(this.frontBuffer);
 
+        this.window.getContentPane().add(this.frontBuffer);
         this.window.pack();
         this.window.setVisible(true);
 
