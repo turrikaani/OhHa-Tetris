@@ -50,7 +50,7 @@ public class GraphicsHandler {
         this.painter.fillRect(920, 600, 40, 40);
         this.painter.setColor(Color.WHITE);
         this.painter.setFont(this.resourceLoader.loadEmbeddedFont("/fonts/lucon.ttf"));
-
+        this.painter.drawString("SCORE", 800, 600);
 
         BufferedImage testImg = this.resourceLoader.loadEmbeddedImage("/images/L_large.png", 26, 26);
         long lasttime = System.nanoTime();
@@ -59,7 +59,7 @@ public class GraphicsHandler {
                 this.painter.drawImage(testImg, 3+27*x, 3+27*y, null);
             }
         }
-        //this.frontBuffer.repaint();
+        this.frontBuffer.repaint();
         long currtime = System.nanoTime();
         System.out.println((currtime-lasttime)/1000);
     }

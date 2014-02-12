@@ -48,7 +48,7 @@ public class ResourceLoader {
     public BufferedImage loadEmbeddedImage(String imageFileName, int imageWidth, int imageHeight) {
 
         InputStream stream = this.getClass().getResourceAsStream(imageFileName);
-        BufferedImage img1 = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage img1 = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_BGR);
         BufferedImage img2 = null;
 
         if (stream == null) {

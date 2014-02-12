@@ -24,7 +24,7 @@ public class TetrisGUI implements Runnable {
         this.window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.window.setResizable(false);
 
-        this.backBuffer = new BufferedImage(960, 640, BufferedImage.TYPE_INT_ARGB);
+        this.backBuffer = new BufferedImage(960, 640, BufferedImage.TYPE_INT_BGR);
         this.frontBuffer = new CustomPanel(this.backBuffer);
 
         this.frontBuffer.setPreferredSize(new Dimension(960, 640));
@@ -33,6 +33,7 @@ public class TetrisGUI implements Runnable {
 
         this.window.getContentPane().add(this.frontBuffer);
         this.window.pack();
+        this.window.setLocationRelativeTo(null);
         this.window.setVisible(true);
 
         this.painter = this.backBuffer.createGraphics();
