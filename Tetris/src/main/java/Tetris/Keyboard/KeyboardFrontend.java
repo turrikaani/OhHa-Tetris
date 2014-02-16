@@ -11,20 +11,21 @@ public class KeyboardFrontend {
     public final int COUNTERCLOCKWISE = 2;
     public final int NEITHER = 0;
 
-    private int leftArrowKeyDownTime = 0;
-    private int rightArrowKeyDownTime = 0;
-    private int downArrowKeyDownTime = 0;
+    private int leftArrowKeyDownTime;
+    private int rightArrowKeyDownTime;
+    private int downArrowKeyDownTime;
 
-    private boolean rotationKey1DownInLastFrame = true;
-    private boolean rotationKey2DownInLastFrame = true;
+    private boolean rotationKey1DownInLastFrame;
+    private boolean rotationKey2DownInLastFrame;
 
-    private boolean pauseKeyDownInLastFrame = true;
+    private boolean pauseKeyDownInLastFrame;
     private boolean gamePaused = false;
 
     private KeyboardStatus kbStatus;
 
     public KeyboardFrontend(KeyboardStatus k) {
         this.kbStatus = k;
+        resetState();
     }
 
     public int getMovementDirection() {
@@ -108,5 +109,15 @@ public class KeyboardFrontend {
 
         pauseKeyDownInLastFrame = pauseKeyDown;
         return gamePaused;
+    }
+
+    public void resetState() {
+
+        leftArrowKeyDownTime = 0;
+        rightArrowKeyDownTime = 0;
+        downArrowKeyDownTime = 0;
+        rotationKey1DownInLastFrame = true;
+        rotationKey2DownInLastFrame = true;
+        pauseKeyDownInLastFrame = true;
     }
 }

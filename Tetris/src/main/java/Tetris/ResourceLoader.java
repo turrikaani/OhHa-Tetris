@@ -41,7 +41,7 @@ public class ResourceLoader {
             System.out.println("Failed to close an input stream!");
         }
 
-        font = font.deriveFont(Font.BOLD, 18f);
+        font = font.deriveFont(Font.BOLD, 19f);
         return font;
     }
 

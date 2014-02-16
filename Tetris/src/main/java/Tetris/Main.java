@@ -8,8 +8,8 @@ public class Main {
 
         KeyboardStatus kbStatus = new KeyboardStatus();
         Clock clock = new Clock(16);
-        ScoringSystem scoring = new ScoringSystem();
+        ScoringSystem scoring = new ScoringSystem(1);
         Playfield playfield = new Playfield();
-        GraphicsHandler gfx = new GraphicsHandler(clock, playfield, scoring, kbStatus);
+        GraphicsHandler gfx = new GraphicsHandler(playfield, scoring, kbStatus);
     }
 }
