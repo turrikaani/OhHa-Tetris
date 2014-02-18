@@ -59,7 +59,7 @@ public class ScoringSystem {
 
     public void addFastDropBonusToScore(int gravityDropsSinceAppearance) {
 
-        if (gravityDropsSinceAppearance < 15) {
+        if (gravityDropsSinceAppearance < 11) {
             this.score += (20-gravityDropsSinceAppearance)*2*this.gravityLevel;
         }
     }

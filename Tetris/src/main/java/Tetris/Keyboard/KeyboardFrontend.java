@@ -2,14 +2,14 @@ package Tetris.Keyboard;
 
 public class KeyboardFrontend {
 
-    public final int LEFT = 1;
-    public final int RIGHT = 2;
-    public final int DOWN = 3;
-    public final int NONE = 0;
+    public static final int LEFT = 1;
+    public static final int RIGHT = 2;
+    public static final int DOWN = 3;
+    public static  final int NONE = 0;
 
-    public final int CLOCKWISE = 1;
-    public final int COUNTERCLOCKWISE = 2;
-    public final int NEITHER = 0;
+    public static final int CLOCKWISE = 1;
+    public static final int COUNTERCLOCKWISE = 2;
+    public static final int NEITHER = 0;
 
     private int leftArrowKeyDownTime;
     private int rightArrowKeyDownTime;
@@ -39,7 +39,7 @@ public class KeyboardFrontend {
             downArrowKeyDownTime = 0;
 
             if (leftArrowKeyDownTime == 1) return LEFT;
-            if (leftArrowKeyDownTime > 16 && (leftArrowKeyDownTime-16) % 6 == 1) return LEFT;
+            if (leftArrowKeyDownTime > 16 && (leftArrowKeyDownTime-16) % 5 == 1) return LEFT;
             else return NONE;
         }
 
@@ -50,7 +50,7 @@ public class KeyboardFrontend {
             downArrowKeyDownTime = 0;
 
             if (rightArrowKeyDownTime == 1) return RIGHT;
-            if (rightArrowKeyDownTime > 16 && (rightArrowKeyDownTime-16) % 6 == 1) return RIGHT;
+            if (rightArrowKeyDownTime > 16 && (rightArrowKeyDownTime-16) % 5 == 1) return RIGHT;
             else return NONE;
         }
 
@@ -61,7 +61,7 @@ public class KeyboardFrontend {
             downArrowKeyDownTime++;
 
             if (downArrowKeyDownTime == 1) return DOWN;
-            if (downArrowKeyDownTime > 4 && (downArrowKeyDownTime-4) % 2 == 1) return DOWN;
+            if (downArrowKeyDownTime > 8 && (downArrowKeyDownTime-8) % 3 == 1) return DOWN;
             else return NONE;
         }
 

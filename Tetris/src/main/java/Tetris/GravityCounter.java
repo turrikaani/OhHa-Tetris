@@ -27,4 +27,8 @@ public class GravityCounter {
         this.counter = (this.counter+1) % this.maxValue;
         return retval;
     }
+
+    public void reset() {
+        this.counter = 0;
+    }
 }

@@ -20,6 +20,8 @@ public class GraphicsHandler {
 
     private ResourceLoader resourceLoader;
     private BufferedImage background;
+    private BufferedImage pauseScreen;
+    private BufferedImage gameOverScreen;
     private BufferedImage[] blockImages;
     private BufferedImage[] tetrominoImages;
 
@@ -51,6 +53,8 @@ public class GraphicsHandler {
 
         this.painter.setFont(this.resourceLoader.loadEmbeddedFont("/fonts/lucon.ttf"));
         this.background = this.resourceLoader.loadEmbeddedImage("/images/background.png", 960, 640);
+        this.pauseScreen = this.resourceLoader.loadEmbeddedImage("/images/pausescreen.png", 270, 540);
+        this.gameOverScreen = this.resourceLoader.loadEmbeddedImage("/images/gameoverscreen.png", 179, 69);
 
         this.blockImages[0] = this.resourceLoader.loadEmbeddedImage("/images/block_I.png", 26, 26);
         this.blockImages[1] = this.resourceLoader.loadEmbeddedImage("/images/block_J.png", 26, 26);
@@ -70,7 +74,6 @@ public class GraphicsHandler {
 
         this.painter.drawImage(this.background, 0, 0, null);
         this.frontBuffer.repaint();
-        updateNextTetromino(new Tetromino(TetrominoType.S, this.playfield));
     }
 
     private void clearArea(int upperLeftX, int upperLeftY, int width, int height) {
@@ -118,9 +121,9 @@ public class GraphicsHandler {
         this.frontBuffer.repaint(128, 567, 56, 23);
     }
 
-    public void updateNextTetromino(Tetromino t) {
+    public void updateNextTetromino(TetrominoType type) {
 
-        switch (t.getBlockType()) {
+        switch (type) {
 
             case I:
                 this.painter.drawImage(this.tetrominoImages[0], 794, 79, null);
@@ -212,7 +215,11 @@ public class GraphicsHandler {
         BlockType type = t.getBlockType();
 
         for (int i=0; i<4; i++) {
-            drawBlock(blockCoordinates[i].x, blockCoordinates[i].y, type);
+            int xCoord = blockCoordinates[i].x;
+            int yCoord = blockCoordinates[i].y;
+            if (xCoord < 0 || xCoord >= 10) continue;
+            if (yCoord < 0 || yCoord >= 20) continue;
+            drawBlock(xCoord, yCoord, type);
         }
     }
 
@@ -222,12 +229,14 @@ public class GraphicsHandler {
             if (i%2 == 0) drawBlock(stepNumber, i, BlockType.EMPTY);
             else drawBlock(9-stepNumber, i, BlockType.EMPTY);
         }
+        this.frontBuffer.repaint(346, 50, 270, 540);
     }
 
     public void showPauseScreen() {
     }
 
     public void showGameOverScreen() {
+        this.painter.drawImage(this.gameOverScreen, 391, 231, null);
     }
 
     private void fillBackgroundWithColor(Color c) {
