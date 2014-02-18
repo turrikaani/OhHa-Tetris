@@ -61,7 +61,7 @@ public class KeyboardFrontend {
             downArrowKeyDownTime++;
 
             if (downArrowKeyDownTime == 1) return DOWN;
-            if (downArrowKeyDownTime > 8 && (downArrowKeyDownTime-8) % 3 == 1) return DOWN;
+            if (downArrowKeyDownTime > 8 && (downArrowKeyDownTime-8) % 2 == 1) return DOWN;
             else return NONE;
         }
 

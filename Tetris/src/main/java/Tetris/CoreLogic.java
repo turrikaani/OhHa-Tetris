@@ -30,7 +30,7 @@ public class CoreLogic {
         KeyboardStatus kbStatus = new KeyboardStatus();
 
         this.kbFrontend = new KeyboardFrontend(kbStatus);
-        this.clock = new Clock(10);
+        this.clock = new Clock(16);
         this.gravityCounter = new GravityCounter(gravity);
         this.scoringSystem = new ScoringSystem(gravity);
         this.randomizer = new TetrominoRandomizer();
@@ -91,6 +91,7 @@ public class CoreLogic {
 
             this.gfxHandler.updatePlayfieldContents(this.tetromino);
             waitForNextFrame();
+            if (this.kbFrontend.isGamePaused() == true) pause();
 
             int rotationDirection = this.kbFrontend.getRotationDirection();
 
@@ -172,9 +173,23 @@ public class CoreLogic {
         this.gfxHandler.showGameOverScreen();
     }
 
+    public void pause() {
+
+        waitForNextFrame();
+        this.gfxHandler.showPauseScreen();
+
+        while (this.kbFrontend.isGamePaused() == true) {
+            waitForNextFrame();
+        }
+
+        this.gfxHandler.clearPlayfield();
+        this.gfxHandler.updatePlayfieldContents(this.tetromino);
+        waitForNextFrame();
+    }
+
     private void waitForNextFrame() {
 
-        this.clock.waitAbsolute(10);
+        this.clock.waitRelative();
 
         this.frameNumber++;
         this.currentTime = System.nanoTime();

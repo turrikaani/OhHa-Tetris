@@ -233,6 +233,8 @@ public class GraphicsHandler {
     }
 
     public void showPauseScreen() {
+        this.painter.drawImage(this.pauseScreen, 346, 50, null);
+        this.frontBuffer.repaint(346, 50, 270, 540);
     }
 
     public void showGameOverScreen() {
