@@ -52,7 +52,7 @@ public class Playfield {
 
         ArrayList<Integer> fullRows = new ArrayList<Integer>();
 
-        for (int y=0; y<NUM_ROWS; y++) {
+        for (int y=NUM_ROWS-1; y>=0; y--) {
 
             boolean emptyCellsInThisRowFound = false;
 

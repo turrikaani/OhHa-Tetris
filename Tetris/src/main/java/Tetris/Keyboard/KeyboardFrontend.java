@@ -111,6 +111,12 @@ public class KeyboardFrontend {
         return gamePaused;
     }
 
+    public boolean isSoftDropActive() {
+
+        if (downArrowKeyDownTime > 8) return true;
+        else return false;
+    }
+
     public void resetState() {
 
         leftArrowKeyDownTime = 0;

@@ -52,7 +52,7 @@ public class GraphicsHandler {
     private void initializeGameWindow() {
 
         this.painter.setFont(this.resourceLoader.loadEmbeddedFont("/fonts/lucon.ttf"));
-        this.background = this.resourceLoader.loadEmbeddedImage("/images/background.png", 960, 640);
+        this.background = this.resourceLoader.loadEmbeddedImage("/images/background2.png", 960, 640);
         this.pauseScreen = this.resourceLoader.loadEmbeddedImage("/images/pausescreen.png", 270, 540);
         this.gameOverScreen = this.resourceLoader.loadEmbeddedImage("/images/gameoverscreen.png", 179, 69);
 
@@ -237,6 +237,7 @@ public class GraphicsHandler {
 
     public void showGameOverScreen() {
         this.painter.drawImage(this.gameOverScreen, 391, 231, null);
+        this.frontBuffer.repaint(391, 231, 179, 69);
     }
 
     private void fillBackgroundWithColor(Color c) {

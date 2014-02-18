@@ -122,8 +122,10 @@ public class CoreLogic {
 
             if (this.gravityCounter.shouldTetrominoFall() == true) {
                 this.gravityDropsSinceAppearance++;
-                boolean didNotCollide = this.tetromino.stepDown();
-                if (didNotCollide == false) return;
+                if (this.kbFrontend.isSoftDropActive() == false) {
+                    boolean didNotCollide = this.tetromino.stepDown();
+                    if (didNotCollide == false) return;
+                }
             }
         }
     }
@@ -166,7 +168,8 @@ public class CoreLogic {
     }
 
     private void showGameOverScreen() {
-        System.out.println("Game over!");
+        this.clock.waitAbsolute(500);
+        this.gfxHandler.showGameOverScreen();
     }
 
     private void waitForNextFrame() {

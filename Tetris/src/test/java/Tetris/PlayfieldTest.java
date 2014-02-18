@@ -107,8 +107,8 @@ public class PlayfieldTest {
         fillRow(0);
         List<Integer> rivit = this.playfield.getListOfFullRows();
         assertEquals(2, rivit.size());
-        assertEquals(0, rivit.get(0).intValue());
-        assertEquals(8, rivit.get(1).intValue());
+        assertEquals(8, rivit.get(0).intValue());
+        assertEquals(0, rivit.get(1).intValue());
     }
 
     @Test
