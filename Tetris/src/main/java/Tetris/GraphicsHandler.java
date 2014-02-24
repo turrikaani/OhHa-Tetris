@@ -14,12 +14,12 @@ public class GraphicsHandler {
 
     private Playfield playfield;
     private ScoringSystem scoringSystem;
-
+    private TetrisGUI gui;
     private Graphics2D painter;
     private CustomPanel frontBuffer;
-
     private ResourceLoader resourceLoader;
-    private BufferedImage background;
+
+    private BufferedImage backgroundImage;
     private BufferedImage pauseScreen;
     private BufferedImage gameOverScreen;
     private BufferedImage[] blockImages;
@@ -30,7 +30,7 @@ public class GraphicsHandler {
         this.playfield = p;
         this.scoringSystem = s;
 
-        TetrisGUI gui = new TetrisGUI();
+        gui = new TetrisGUI();
         SwingUtilities.invokeLater(gui);
 
         do {
@@ -44,182 +44,142 @@ public class GraphicsHandler {
         gui.addKeyListener(k);
 
         this.resourceLoader = new ResourceLoader();
-        this.blockImages = new BufferedImage[7];
-        this.tetrominoImages = new BufferedImage[7];
         initializeGameWindow();
     }
 
     private void initializeGameWindow() {
 
-        this.painter.setFont(this.resourceLoader.loadEmbeddedFont("/fonts/lucon.ttf"));
-        this.background = this.resourceLoader.loadEmbeddedImage("/images/background2.png", 960, 640);
-        this.pauseScreen = this.resourceLoader.loadEmbeddedImage("/images/pausescreen.png", 270, 540);
-        this.gameOverScreen = this.resourceLoader.loadEmbeddedImage("/images/gameoverscreen.png", 179, 69);
+        painter.setFont(resourceLoader.loadEmbeddedFont("/fonts/lucon.ttf"));
+        backgroundImage = resourceLoader.loadEmbeddedImage("/images/background.png", 960, 640);
+        pauseScreen = resourceLoader.loadEmbeddedImage("/images/pausescreen.png", 270, 540);
+        gameOverScreen = resourceLoader.loadEmbeddedImage("/images/gameoverscreen.png", 179, 69);
 
-        this.blockImages[0] = this.resourceLoader.loadEmbeddedImage("/images/block_I.png", 26, 26);
-        this.blockImages[1] = this.resourceLoader.loadEmbeddedImage("/images/block_J.png", 26, 26);
-        this.blockImages[2] = this.resourceLoader.loadEmbeddedImage("/images/block_L.png", 26, 26);
-        this.blockImages[3] = this.resourceLoader.loadEmbeddedImage("/images/block_O.png", 26, 26);
-        this.blockImages[4] = this.resourceLoader.loadEmbeddedImage("/images/block_S.png", 26, 26);
-        this.blockImages[5] = this.resourceLoader.loadEmbeddedImage("/images/block_T.png", 26, 26);
-        this.blockImages[6] = this.resourceLoader.loadEmbeddedImage("/images/block_Z.png", 26, 26);
+        blockImages = new BufferedImage[8];
+        blockImages[0] = resourceLoader.loadEmbeddedImage("/images/block_I.png", 26, 26);
+        blockImages[1] = resourceLoader.loadEmbeddedImage("/images/block_J.png", 26, 26);
+        blockImages[2] = resourceLoader.loadEmbeddedImage("/images/block_L.png", 26, 26);
+        blockImages[3] = resourceLoader.loadEmbeddedImage("/images/block_O.png", 26, 26);
+        blockImages[4] = resourceLoader.loadEmbeddedImage("/images/block_S.png", 26, 26);
+        blockImages[5] = resourceLoader.loadEmbeddedImage("/images/block_T.png", 26, 26);
+        blockImages[6] = resourceLoader.loadEmbeddedImage("/images/block_Z.png", 26, 26);
+        blockImages[7] = resourceLoader.loadEmbeddedImage("/images/block_E.png", 26, 26);
 
-        this.tetrominoImages[0] = this.resourceLoader.loadEmbeddedImage("/images/tetromino_I.png", 73, 37);
-        this.tetrominoImages[1] = this.resourceLoader.loadEmbeddedImage("/images/tetromino_J.png", 73, 37);
-        this.tetrominoImages[2] = this.resourceLoader.loadEmbeddedImage("/images/tetromino_L.png", 73, 37);
-        this.tetrominoImages[3] = this.resourceLoader.loadEmbeddedImage("/images/tetromino_O.png", 73, 37);
-        this.tetrominoImages[4] = this.resourceLoader.loadEmbeddedImage("/images/tetromino_S.png", 73, 37);
-        this.tetrominoImages[5] = this.resourceLoader.loadEmbeddedImage("/images/tetromino_T.png", 73, 37);
-        this.tetrominoImages[6] = this.resourceLoader.loadEmbeddedImage("/images/tetromino_Z.png", 73, 37);
+        tetrominoImages = new BufferedImage[7];
+        tetrominoImages[0] = resourceLoader.loadEmbeddedImage("/images/tetromino_I.png", 73, 37);
+        tetrominoImages[1] = resourceLoader.loadEmbeddedImage("/images/tetromino_J.png", 73, 37);
+        tetrominoImages[2] = resourceLoader.loadEmbeddedImage("/images/tetromino_L.png", 73, 37);
+        tetrominoImages[3] = resourceLoader.loadEmbeddedImage("/images/tetromino_O.png", 73, 37);
+        tetrominoImages[4] = resourceLoader.loadEmbeddedImage("/images/tetromino_S.png", 73, 37);
+        tetrominoImages[5] = resourceLoader.loadEmbeddedImage("/images/tetromino_T.png", 73, 37);
+        tetrominoImages[6] = resourceLoader.loadEmbeddedImage("/images/tetromino_Z.png", 73, 37);
 
-        this.painter.drawImage(this.background, 0, 0, null);
-        this.frontBuffer.repaint();
-    }
-
-    private void clearArea(int upperLeftX, int upperLeftY, int width, int height) {
-
-        this.painter.setColor(Color.BLACK);
-        this.painter.fillRect(upperLeftX, upperLeftY, width, height);
-        this.painter.setColor(Color.WHITE);
+        painter.drawImage(backgroundImage, 0, 0, null);
+        frontBuffer.repaint();
     }
 
     public void updateScore() {
 
         StringBuilder formatter = new StringBuilder();
-        String s = String.format("%09d", this.scoringSystem.getScore());
+        String s = String.format("%09d", scoringSystem.getScore());
         formatter.append(s, 0, 3).append(" ");
         formatter.append(s, 3, 6).append(" ");
         formatter.append(s, 6, 9);
 
         clearArea(56, 78, 148, 34);
-        this.painter.drawString(formatter.toString(), 65, 102);
-        this.frontBuffer.repaint(56, 78, 148, 34);
+        painter.drawString(formatter.toString(), 65, 102);
+        frontBuffer.repaint(56, 78, 148, 34);
     }
 
     public void updateLineStats() {
 
         clearArea(132, 216, 74, 180);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getSingleLineClears()), 137, 236);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getDoubleLineClears()), 137, 274);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getTripleLineClears()), 137, 312);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getQuadrupleLineClears()), 137, 350);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getTotalLinesCleared()), 137, 388);
-        this.frontBuffer.repaint(132, 216, 74, 180);
+        painter.drawString(String.format("%03d", scoringSystem.getSingleLineClears()), 137, 236);
+        painter.drawString(String.format("%03d", scoringSystem.getDoubleLineClears()), 137, 274);
+        painter.drawString(String.format("%03d", scoringSystem.getTripleLineClears()), 137, 312);
+        painter.drawString(String.format("%03d", scoringSystem.getQuadrupleLineClears()), 137, 350);
+        painter.drawString(String.format("%03d", scoringSystem.getTotalLinesCleared()), 137, 388);
+        frontBuffer.repaint(132, 216, 74, 180);
     }
 
     public void updateGravityLevel() {
 
         clearArea(163, 479, 34, 22);
-        this.painter.drawString(String.format("%02d", this.scoringSystem.getGravityLevel()), 167, 497);
-        this.frontBuffer.repaint(163, 479, 34, 22);
+        painter.drawString(String.format("%02d", scoringSystem.getGravityLevel()), 167, 497);
+        frontBuffer.repaint(163, 479, 34, 22);
     }
 
     public void updateFPS(double fps) {
 
-        clearArea(128, 567, 56, 23);
-        this.painter.drawString(String.format("%04.1f", fps), 132, 586);
-        this.frontBuffer.repaint(128, 567, 56, 23);
+        clearArea(128, 567, 80, 23);
+        painter.drawString(String.format("%04.1f", fps), 132, 586);
+        frontBuffer.repaint(128, 567, 80, 23);
     }
 
     public void updateNextTetromino(TetrominoType type) {
 
-        switch (type) {
-
-            case I:
-                this.painter.drawImage(this.tetrominoImages[0], 794, 79, null);
-                break;
-            case J:
-                this.painter.drawImage(this.tetrominoImages[1], 794, 79, null);
-                break;
-            case L:
-                this.painter.drawImage(this.tetrominoImages[2], 794, 79, null);
-                break;
-            case O:
-                this.painter.drawImage(this.tetrominoImages[3], 794, 79, null);
-                break;
-            case S:
-                this.painter.drawImage(this.tetrominoImages[4], 794, 79, null);
-                break;
-            case T:
-                this.painter.drawImage(this.tetrominoImages[5], 794, 79, null);
-                break;
-            case Z:
-                this.painter.drawImage(this.tetrominoImages[6], 794, 79, null);
-                break;
-        }
-
-        this.frontBuffer.repaint(794, 79, 73, 37);
+        int index = getIndexByTetrominoType(type);
+        painter.drawImage(tetrominoImages[index], 794, 79, null);
+        frontBuffer.repaint(794, 79, 73, 37);
     }
 
     public void updateTetrominoStats() {
 
         clearArea(850, 235, 68, 354);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getNumTetrominoes_I()), 854, 254);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getNumTetrominoes_J()), 854, 297);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getNumTetrominoes_L()), 854, 346);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getNumTetrominoes_O()), 854, 395);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getNumTetrominoes_S()), 854, 444);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getNumTetrominoes_T()), 854, 493);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getNumTetrominoes_Z()), 854, 542);
-        this.painter.drawString(String.format("%03d", this.scoringSystem.getTotalNumberOfTetrominoes()), 854, 585);
-        this.frontBuffer.repaint(850, 235, 68, 354);
+        painter.drawString(String.format("%03d", scoringSystem.getNumTetrominoes_I()), 854, 254);
+        painter.drawString(String.format("%03d", scoringSystem.getNumTetrominoes_J()), 854, 297);
+        painter.drawString(String.format("%03d", scoringSystem.getNumTetrominoes_L()), 854, 346);
+        painter.drawString(String.format("%03d", scoringSystem.getNumTetrominoes_O()), 854, 395);
+        painter.drawString(String.format("%03d", scoringSystem.getNumTetrominoes_S()), 854, 444);
+        painter.drawString(String.format("%03d", scoringSystem.getNumTetrominoes_T()), 854, 493);
+        painter.drawString(String.format("%03d", scoringSystem.getNumTetrominoes_Z()), 854, 542);
+        painter.drawString(String.format("%03d", scoringSystem.getTotalNumberOfTetrominoes()), 854, 585);
+        frontBuffer.repaint(850, 235, 68, 354);
+    }
+
+    public void clearPlayfield() {
+        clearArea(346, 50, 270, 540);
     }
 
     public void updatePlayfieldContents(Tetromino t) {
 
         for (int y=0; y<20; y++) {
             for (int x=0; x<10; x++) {
-                drawBlock(x, y, this.playfield.getCellType(x, y));
+                drawBlock(x, y, playfield.getCellType(x, y));
             }
         }
 
-        if (t != null) drawTetromino(t);
-        this.frontBuffer.repaint(346, 50, 270, 540);
+        drawTetromino(t);
+        frontBuffer.repaint(346, 50, 270, 540);
     }
 
-    private void drawBlock(int logicalX, int logicalY, BlockType blocktype) {
-
-        switch (blocktype) {
-
-            case I :
-                this.painter.drawImage(this.blockImages[0], 346+27*logicalX, 563-27*logicalY, null);
-                return;
-            case J :
-                this.painter.drawImage(this.blockImages[1], 346+27*logicalX, 563-27*logicalY, null);
-                return;
-            case L :
-                this.painter.drawImage(this.blockImages[2], 346+27*logicalX, 563-27*logicalY, null);
-                return;
-            case O :
-                this.painter.drawImage(this.blockImages[3], 346+27*logicalX, 563-27*logicalY, null);
-                return;
-            case S :
-                this.painter.drawImage(this.blockImages[4], 346+27*logicalX, 563-27*logicalY, null);
-                return;
-            case T :
-                this.painter.drawImage(this.blockImages[5], 346+27*logicalX, 563-27*logicalY, null);
-                return;
-            case Z :
-                this.painter.drawImage(this.blockImages[6], 346+27*logicalX, 563-27*logicalY, null);
-                return;
-            default:
-                this.painter.setColor(Color.BLACK);
-                this.painter.fillRect(346+27*logicalX, 563-27*logicalY, 26, 26);
-                return;
-        }
+    public void updateWholeScreen() {
+        frontBuffer.repaint();
     }
 
-    private void drawTetromino(Tetromino t) {
+    public void drawTetromino(Tetromino t) {
+
+        if (t == null) return;
 
         Coordinate[] blockCoordinates = t.getBlockCoordinates();
         BlockType type = t.getBlockType();
 
         for (int i=0; i<4; i++) {
-            int xCoord = blockCoordinates[i].x;
-            int yCoord = blockCoordinates[i].y;
-            if (xCoord < 0 || xCoord >= 10) continue;
-            if (yCoord < 0 || yCoord >= 20) continue;
-            drawBlock(xCoord, yCoord, type);
+            if (blockCoordinates[i].x < 0 || blockCoordinates[i].x >= 10) continue;
+            if (blockCoordinates[i].y < 0 || blockCoordinates[i].y >= 20) continue;
+            drawBlock(blockCoordinates[i].x, blockCoordinates[i].y, type);
+        }
+    }
+
+    public void drawLockingTetromino(Tetromino t) {
+
+        if (t == null) return;
+
+        Coordinate[] blockCoordinates = t.getBlockCoordinates();
+
+        for (int i=0; i<4; i++) {
+            if (blockCoordinates[i].x < 0 || blockCoordinates[i].x >= 10) continue;
+            if (blockCoordinates[i].y < 0 || blockCoordinates[i].y >= 20) continue;
+            drawLockingBlock(blockCoordinates[i].x, blockCoordinates[i].y);
         }
     }
 
@@ -229,27 +189,88 @@ public class GraphicsHandler {
             if (i%2 == 0) drawBlock(stepNumber, i, BlockType.EMPTY);
             else drawBlock(9-stepNumber, i, BlockType.EMPTY);
         }
-        this.frontBuffer.repaint(346, 50, 270, 540);
+        frontBuffer.repaint(346, 50, 270, 540);
     }
 
     public void showPauseScreen() {
-        this.painter.drawImage(this.pauseScreen, 346, 50, null);
-        this.frontBuffer.repaint(346, 50, 270, 540);
+        painter.drawImage(this.pauseScreen, 346, 50, null);
+        frontBuffer.repaint(346, 50, 270, 540);
     }
 
     public void showGameOverScreen() {
-        this.painter.drawImage(this.gameOverScreen, 391, 231, null);
-        this.frontBuffer.repaint(391, 231, 179, 69);
+        painter.drawImage(this.gameOverScreen, 391, 231, null);
+        frontBuffer.repaint(391, 231, 179, 69);
     }
 
-    private void fillBackgroundWithColor(Color c) {
+    public void closeWindow() {
+        gui.closeWindow();
     }
 
-    public void clearPlayfield() {
-        clearArea(346, 50, 270, 540);
+    private void clearArea(int upperLeftX, int upperLeftY, int width, int height) {
+
+        painter.setColor(Color.BLACK);
+        painter.fillRect(upperLeftX, upperLeftY, width, height);
+        painter.setColor(Color.WHITE);
     }
 
-    public void updateWholeScreen() {
-        this.frontBuffer.repaint();
+    private void drawBlock(int x, int y, BlockType type) {
+
+        int index = getIndexByBlockType(type);
+        painter.drawImage(blockImages[index], 346+27*x, 563-27*y, null);
+    }
+
+    private void drawLockingBlock(int x, int y) {
+
+        painter.setColor(Color.WHITE);
+        painter.fillRect(346+27*x, 563-27*y, 26, 26);
+    }
+
+    private int getIndexByBlockType(BlockType type) {
+
+        switch (type) {
+
+            case I : return 0;
+            case J : return 1;
+            case L : return 2;
+            case O : return 3;
+            case S : return 4;
+            case T : return 5;
+            case Z : return 6;
+            default: return 7;
+        }
+    }
+
+    private int getIndexByTetrominoType(TetrominoType type) {
+
+        switch (type) {
+
+            case I : return 0;
+            case J : return 1;
+            case L : return 2;
+            case O : return 3;
+            case S : return 4;
+            case T : return 5;
+            default: return 6;
+        }
+    }
+
+    public void fillBackgroundWithColor(Color c) {
+
+        painter.setColor(c);
+        painter.fillRect(  0,   0,  24, 640);
+        painter.fillRect(235,   0,  78, 640);
+        painter.fillRect(648,   0,  77, 640);
+        painter.fillRect(936,   0,  24, 640);
+        painter.fillRect( 24,   0, 211,  20);
+        painter.fillRect( 24, 140, 211,   9);
+        painter.fillRect( 24, 425, 211,  10);
+        painter.fillRect( 24, 529, 211,  10);
+        painter.fillRect( 24, 620, 211,  20);
+        painter.fillRect(313,   0, 335,  18);
+        painter.fillRect(313, 622, 335,  18);
+        painter.fillRect(725,   0, 211,  20);
+        painter.fillRect(725, 153, 211,   9);
+        painter.fillRect(725, 620, 211,  20);
+        frontBuffer.repaint();
     }
 }

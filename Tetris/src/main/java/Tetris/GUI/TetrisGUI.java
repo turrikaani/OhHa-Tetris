@@ -50,4 +50,8 @@ public class TetrisGUI implements Runnable {
     public void addKeyListener(KeyListener kbListener) {
         this.window.addKeyListener(kbListener);
     }
+
+    public void closeWindow() {
+        window.dispose();
+    }
 }

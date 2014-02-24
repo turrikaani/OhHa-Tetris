@@ -39,7 +39,7 @@ public class KeyboardFrontend {
             downArrowKeyDownTime = 0;
 
             if (leftArrowKeyDownTime == 1) return LEFT;
-            if (leftArrowKeyDownTime > 16 && (leftArrowKeyDownTime-16) % 5 == 1) return LEFT;
+            if (leftArrowKeyDownTime > 16 && (leftArrowKeyDownTime-16) % 6 == 1) return LEFT;
             else return NONE;
         }
 
@@ -50,7 +50,7 @@ public class KeyboardFrontend {
             downArrowKeyDownTime = 0;
 
             if (rightArrowKeyDownTime == 1) return RIGHT;
-            if (rightArrowKeyDownTime > 16 && (rightArrowKeyDownTime-16) % 5 == 1) return RIGHT;
+            if (rightArrowKeyDownTime > 16 && (rightArrowKeyDownTime-16) % 6 == 1) return RIGHT;
             else return NONE;
         }
 
@@ -61,7 +61,7 @@ public class KeyboardFrontend {
             downArrowKeyDownTime++;
 
             if (downArrowKeyDownTime == 1) return DOWN;
-            if (downArrowKeyDownTime > 8 && (downArrowKeyDownTime-8) % 2 == 1) return DOWN;
+            if (downArrowKeyDownTime > 4 && (downArrowKeyDownTime-4) % 2 == 1) return DOWN;
             else return NONE;
         }
 
@@ -100,15 +100,25 @@ public class KeyboardFrontend {
 
     public boolean isGamePaused() {
 
-        boolean pauseKeyDown = kbStatus.getPauseKeyStatus();
+        if (isPauseStateChangeTriggered()) {
 
-        if (pauseKeyDown && !pauseKeyDownInLastFrame) {
             if (!gamePaused) gamePaused = true;
             else gamePaused = false;
         }
 
-        pauseKeyDownInLastFrame = pauseKeyDown;
         return gamePaused;
+    }
+
+    public boolean isPauseStateChangeTriggered() {
+
+        boolean isTriggered;
+        boolean isPauseKeyDownNow = kbStatus.getPauseKeyStatus();
+
+        if (isPauseKeyDownNow && !pauseKeyDownInLastFrame) isTriggered = true;
+        else isTriggered = false;
+
+        pauseKeyDownInLastFrame = isPauseKeyDownNow;
+        return isTriggered;
     }
 
     public boolean isSoftDropActive() {

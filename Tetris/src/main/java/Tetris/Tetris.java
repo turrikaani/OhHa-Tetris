@@ -2,9 +2,10 @@ package Tetris;
 
 import Tetris.DataTypes.*;
 import Tetris.Keyboard.*;
+import java.awt.Color;
 import java.util.List;
 
-public class CoreLogic {
+public class Tetris {
 
     private KeyboardFrontend kbFrontend;
     private Clock clock;
@@ -19,13 +20,13 @@ public class CoreLogic {
     private TetrominoType nextTetrominoType;
     private List<Integer> rowsToClear;
 
-    private int gravityDropsSinceAppearance;
+    private int framesSinceTetrominoAppearance;
     private int frameNumber = 0;
     private long currentTime, lastTime;
     private long totalTime = 0;
     private boolean gameIsOver = false;
 
-    public CoreLogic(int gravity) {
+    public Tetris(int gravity) {
 
         KeyboardStatus kbStatus = new KeyboardStatus();
 
@@ -44,7 +45,7 @@ public class CoreLogic {
         this.clock.waitAbsolute(1000);
         this.gfxHandler.clearPlayfield();
 
-        this.nextTetrominoType = this.randomizer.getRandomTetrominoType();
+        this.nextTetrominoType = TetrominoType.I;
 
         this.clock.restart();
         this.lastTime = System.nanoTime();
@@ -60,12 +61,18 @@ public class CoreLogic {
         }
 
         showGameOverScreen();
+
+        while (true) {
+            clock.waitAbsolute(100);
+            if (kbFrontend.isPauseStateChangeTriggered() == true) break;
+        }
+        gfxHandler.closeWindow();
     }
 
     private void tetrominoAppearance() {
 
         this.currentTetrominoType = this.nextTetrominoType;
-        this.nextTetrominoType = this.randomizer.getRandomTetrominoType();
+        this.nextTetrominoType = TetrominoType.I;
         this.scoringSystem.addTetrominoToStats(this.currentTetrominoType);
         this.tetromino = new Tetromino(this.currentTetrominoType, this.playfield);
 
@@ -83,57 +90,56 @@ public class CoreLogic {
 
     private void tetrominoFreeMovement() {
 
-        this.kbFrontend.resetState();
-        this.gravityCounter.reset();
-        this.gravityDropsSinceAppearance = 0;
+        kbFrontend.resetState();
+        gravityCounter.reset();
+        framesSinceTetrominoAppearance = 0;
 
         while (true) {
 
-            this.gfxHandler.updatePlayfieldContents(this.tetromino);
+            gfxHandler.updatePlayfieldContents(tetromino);
             waitForNextFrame();
-            if (this.kbFrontend.isGamePaused() == true) pause();
+            framesSinceTetrominoAppearance++;
 
-            int rotationDirection = this.kbFrontend.getRotationDirection();
+            if (kbFrontend.isGamePaused() == true) pause();
 
-            switch (rotationDirection) {
+            switch (kbFrontend.getRotationDirection()) {
 
                 case KeyboardFrontend.CLOCKWISE:
-                    this.tetromino.rotateClockwise();
+                    tetromino.rotateClockwise();
                     break;
+
                 case KeyboardFrontend.COUNTERCLOCKWISE:
-                    this.tetromino.rotateCounterclockwise();
+                    tetromino.rotateCounterclockwise();
                     break;
             }
 
-            int movementDirection = this.kbFrontend.getMovementDirection();
-
-            switch (movementDirection) {
+            switch (kbFrontend.getMovementDirection()) {
 
                 case KeyboardFrontend.LEFT:
-                    this.tetromino.stepLeft();
+                    tetromino.stepLeft();
                     break;
+
                 case KeyboardFrontend.RIGHT:
-                    this.tetromino.stepRight();
+                    tetromino.stepRight();
                     break;
+
                 case KeyboardFrontend.DOWN:
-                    boolean didNotCollide = this.tetromino.stepDown();
-                    if (didNotCollide == false) return;
-                    break;
+                    if (tetromino.stepDown() == false) return;
+                    else continue;
             }
 
-            if (this.gravityCounter.shouldTetrominoFall() == true) {
-                this.gravityDropsSinceAppearance++;
-                if (this.kbFrontend.isSoftDropActive() == false) {
-                    boolean didNotCollide = this.tetromino.stepDown();
-                    if (didNotCollide == false) return;
-                }
+            if (gravityCounter.shouldTetrominoFall() == true) {
+                if (kbFrontend.isSoftDropActive() == true) continue;
+                if (tetromino.stepDown() == false) return;
             }
         }
     }
 
     private void tetrominoLocking() {
 
-        this.gfxHandler.updatePlayfieldContents(this.tetromino);
+        gfxHandler.updatePlayfieldContents(tetromino);
+        gfxHandler.drawLockingTetromino(tetromino);
+        gfxHandler.updateWholeScreen();
 
         Coordinate[] blockCoordinates = this.tetromino.getBlockCoordinates();
         for (int i=0; i<4; i++) {
@@ -141,7 +147,7 @@ public class CoreLogic {
         }
 
         this.tetromino = null;
-        this.scoringSystem.addFastDropBonusToScore(this.gravityDropsSinceAppearance);
+        this.scoringSystem.addFastDropBonusToScore(this.framesSinceTetrominoAppearance);
         this.rowsToClear = this.playfield.getListOfFullRows();
 
         for (int i=0; i<5; i++) {
@@ -153,12 +159,14 @@ public class CoreLogic {
 
     private void showRowClearAnimation() {
 
+        int numRowsToClear = rowsToClear.size();
+
         for (int i=0; i<10; i++) {
             this.gfxHandler.animateOneStepOfRowClearAnimation(i, this.rowsToClear);
-            waitForNextFrame();
-            waitForNextFrame();
-            waitForNextFrame();
-            waitForNextFrame();
+            if (numRowsToClear == 4 && i%2 == 0) gfxHandler.fillBackgroundWithColor(Color.WHITE);
+            for (int j=0; j<2; j++) waitForNextFrame();
+            if (numRowsToClear == 4 && i%2 == 0) gfxHandler.fillBackgroundWithColor(Color.BLACK);
+            for (int j=0; j<4; j++) waitForNextFrame();
         }
 
         this.scoringSystem.addClearedRowsToScore(this.rowsToClear);
@@ -189,7 +197,7 @@ public class CoreLogic {
 
     private void waitForNextFrame() {
 
-        this.clock.waitRelative();
+        this.clock.waitAbsolute(15);
 
         this.frameNumber++;
         this.currentTime = System.nanoTime();

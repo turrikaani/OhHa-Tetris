@@ -42,7 +42,7 @@
                       <manifest>
                           <addClasspath>true</addClasspath>
                           <classpathPrefix>lib/</classpathPrefix>
-                          <mainClass>Tetris.Main</mainClass>
+                          <mainClass>StartMenu.Main</mainClass>
                       </manifest>
                   </archive>
               </configuration>
