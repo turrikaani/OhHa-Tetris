@@ -16,7 +16,7 @@ public class MainMenuWindow implements Runnable, ActionListener {
 
     private JFrame window;
     private GravitySelectionWindow gravitySelectionWindow;
-    public static int gravityLevel;
+    public static int gravityLevel = 5;
 
     public MainMenuWindow() {
     }
@@ -32,8 +32,6 @@ public class MainMenuWindow implements Runnable, ActionListener {
         window.pack();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-
-        gravityLevel = 5;
 
         gravitySelectionWindow = new GravitySelectionWindow();
         SwingUtilities.invokeLater(gravitySelectionWindow);
@@ -82,9 +80,9 @@ public class MainMenuWindow implements Runnable, ActionListener {
 
             window.setVisible(false);
             gravitySelectionWindow.closeWindow();
-            GameStarter gameStarter = new GameStarter(gravityLevel);
-            SwingUtilities.invokeLater(gameStarter);
-            window.setVisible(true);
+            GameStarter gameStarter = new GameStarter(gravityLevel, this);
+            Thread t = new Thread(gameStarter);
+            t.start();
         }
 
         else if (command.equals("Select Gravity Level")) {
@@ -96,5 +94,10 @@ public class MainMenuWindow implements Runnable, ActionListener {
 
             System.exit(0);
         }
+    }
+
+    public void openWindow() {
+
+        window.setVisible(true);
     }
 }

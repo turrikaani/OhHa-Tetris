@@ -40,13 +40,13 @@ public class GravitySelectionWindow implements Runnable, ActionListener {
         container.setLayout(new BorderLayout());
 
         JPanel indentationPanel = new JPanel();
-        indentationPanel.setPreferredSize(new Dimension(10, 200));
+        indentationPanel.setPreferredSize(new Dimension(16, 86));
 
         JPanel infoTextPanel = new GravitySelectionPanel();
-        infoTextPanel.setPreferredSize(new Dimension(300, 100));
+        infoTextPanel.setPreferredSize(new Dimension(316, 88));
 
         JPanel radioButtonPanel = new JPanel();
-        radioButtonPanel.setPreferredSize(new Dimension(300, 200));
+        radioButtonPanel.setPreferredSize(new Dimension(300, 86));
         createRadioButtons(radioButtonPanel);
 
         JPanel okCancelButtonPanel = new JPanel();

@@ -6,6 +6,7 @@ import java.util.Random;
 public class TetrominoRandomizer {
 
     private Random randomizer;
+    private int previousSelector = -1;
 
     public TetrominoRandomizer() {
         this.randomizer = new Random();
@@ -13,7 +14,14 @@ public class TetrominoRandomizer {
 
     public TetrominoType getRandomTetrominoType() {
 
-        int selector = this.randomizer.nextInt(7);
+        int selector;
+
+        do {
+            selector = randomizer.nextInt(7);
+        }
+        while (selector == previousSelector);
+
+        previousSelector = selector;
 
         switch (selector) {
 

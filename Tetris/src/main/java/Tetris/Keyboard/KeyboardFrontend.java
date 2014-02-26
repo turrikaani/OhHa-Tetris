@@ -17,8 +17,8 @@ public class KeyboardFrontend {
 
     private boolean rotationKey1DownInLastFrame;
     private boolean rotationKey2DownInLastFrame;
-
     private boolean pauseKeyDownInLastFrame;
+
     private boolean gamePaused = false;
 
     private KeyboardStatus kbStatus;
@@ -60,7 +60,6 @@ public class KeyboardFrontend {
             rightArrowKeyDownTime = 0;
             downArrowKeyDownTime++;
 
-            if (downArrowKeyDownTime == 1) return DOWN;
             if (downArrowKeyDownTime > 4 && (downArrowKeyDownTime-4) % 2 == 1) return DOWN;
             else return NONE;
         }
@@ -123,7 +122,7 @@ public class KeyboardFrontend {
 
     public boolean isSoftDropActive() {
 
-        if (downArrowKeyDownTime > 8) return true;
+        if (downArrowKeyDownTime > 4) return true;
         else return false;
     }
 

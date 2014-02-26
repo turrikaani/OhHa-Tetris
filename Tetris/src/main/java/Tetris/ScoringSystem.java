@@ -57,10 +57,13 @@ public class ScoringSystem {
         this.totalLinesCleared += rowList.size();
     }
 
-    public void addFastDropBonusToScore(int gravityDropsSinceAppearance) {
+    public void addFastDropBonusToScore(int framesSinceTetrominoAppearance) {
 
-        if (gravityDropsSinceAppearance < 11) {
-            this.score += (20-gravityDropsSinceAppearance)*2*this.gravityLevel;
+        int normalization = GravityTable.getGravityDropFrequencyInFrames(gravityLevel);
+        int normalizedFrameCount = framesSinceTetrominoAppearance / normalization;
+
+        if (normalizedFrameCount < 11) {
+            this.score += (20-normalizedFrameCount)*2*this.gravityLevel;
         }
     }
 

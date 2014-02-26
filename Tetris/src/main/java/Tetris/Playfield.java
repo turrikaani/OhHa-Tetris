@@ -48,6 +48,14 @@ public class Playfield {
         return this.grid[yCoord][xCoord];
     }
 
+    public void clearFullRows() {
+
+        List<Integer> rowsToBeCleared = getListOfFullRows();
+        for (int i : rowsToBeCleared) {
+            clearRow(i);
+        }
+    }
+
     public List<Integer> getListOfFullRows() {
 
         ArrayList<Integer> fullRows = new ArrayList<Integer>();

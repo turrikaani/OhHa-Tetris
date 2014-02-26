@@ -2,17 +2,22 @@ package StartMenu;
 
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class MainMenuPanel extends JPanel {
 
+    private Image mainMenuBackground;
+
     public MainMenuPanel() {
+        ImageIcon imgIcon = new ImageIcon(this.getClass().getResource("/images/startscreen.png"));
+        mainMenuBackground = imgIcon.getImage();
     }
 
     public void paintComponent(Graphics graphics) {
 
         super.paintComponent(graphics);
-        graphics.setFont(graphics.getFont().deriveFont(Font.BOLD, 14f));
-        graphics.drawString("jTetris 1.0", 20, 20);
+        graphics.drawImage(mainMenuBackground, 0, 0, null);
     }
 }

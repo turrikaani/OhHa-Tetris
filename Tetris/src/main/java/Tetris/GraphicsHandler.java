@@ -6,7 +6,6 @@ import Tetris.Keyboard.KeyboardStatus;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.SwingUtilities;
 
@@ -14,7 +13,6 @@ public class GraphicsHandler {
 
     private Playfield playfield;
     private ScoringSystem scoringSystem;
-    private TetrisGUI gui;
     private Graphics2D painter;
     private CustomPanel frontBuffer;
     private ResourceLoader resourceLoader;
@@ -30,7 +28,7 @@ public class GraphicsHandler {
         this.playfield = p;
         this.scoringSystem = s;
 
-        gui = new TetrisGUI();
+        TetrisGUI gui = new TetrisGUI();
         SwingUtilities.invokeLater(gui);
 
         do {
@@ -44,10 +42,10 @@ public class GraphicsHandler {
         gui.addKeyListener(k);
 
         this.resourceLoader = new ResourceLoader();
-        initializeGameWindow();
+        loadResourceFiles();
     }
 
-    private void initializeGameWindow() {
+    private void loadResourceFiles() {
 
         painter.setFont(resourceLoader.loadEmbeddedFont("/fonts/lucon.ttf"));
         backgroundImage = resourceLoader.loadEmbeddedImage("/images/background.png", 960, 640);
@@ -72,9 +70,12 @@ public class GraphicsHandler {
         tetrominoImages[4] = resourceLoader.loadEmbeddedImage("/images/tetromino_S.png", 73, 37);
         tetrominoImages[5] = resourceLoader.loadEmbeddedImage("/images/tetromino_T.png", 73, 37);
         tetrominoImages[6] = resourceLoader.loadEmbeddedImage("/images/tetromino_Z.png", 73, 37);
+    }
+
+    public void initializeGameWindow() {
 
         painter.drawImage(backgroundImage, 0, 0, null);
-        frontBuffer.repaint();
+        this.frontBuffer.repaint();
     }
 
     public void updateScore() {
@@ -181,6 +182,8 @@ public class GraphicsHandler {
             if (blockCoordinates[i].y < 0 || blockCoordinates[i].y >= 20) continue;
             drawLockingBlock(blockCoordinates[i].x, blockCoordinates[i].y);
         }
+
+        frontBuffer.repaint(346, 50, 270, 540);
     }
 
     public void animateOneStepOfRowClearAnimation(int stepNumber, List<Integer> rowsToBeCleared) {
@@ -202,8 +205,8 @@ public class GraphicsHandler {
         frontBuffer.repaint(391, 231, 179, 69);
     }
 
-    public void closeWindow() {
-        gui.closeWindow();
+    public void closeGameWindow() {
+        SwingUtilities.getWindowAncestor(frontBuffer).dispose();
     }
 
     private void clearArea(int upperLeftX, int upperLeftY, int width, int height) {

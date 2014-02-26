@@ -26,7 +26,6 @@ public class Clock {
                 this.lastTime = currentTime;
                 return;
             }
-
             else waitAbsolute(1);
         }
     }

@@ -21,11 +21,11 @@ public class KeyboardStatus implements KeyListener {
 
         int keyCode = e.getKeyCode();
 
-        if      (keyCode == KeyEvent.VK_LEFT)  this.leftArrowKeyDown = true;
+        if      (keyCode == KeyEvent.VK_LEFT) this.leftArrowKeyDown = true;
         else if (keyCode == KeyEvent.VK_RIGHT) this.rightArrowKeyDown = true;
-        else if (keyCode == KeyEvent.VK_DOWN)  this.downArrowKeyDown = true;
+        else if (keyCode == KeyEvent.VK_DOWN) this.downArrowKeyDown = true;
         else if (keyCode == KeyEvent.VK_SHIFT) this.rotationKey1Down = true;
-        else if (keyCode == KeyEvent.VK_SPACE) this.rotationKey2Down = true;
+        else if (keyCode == KeyEvent.VK_CONTROL) this.rotationKey2Down = true;
         else if (keyCode == KeyEvent.VK_ENTER) this.pauseKeyDown = true;
     }
 
@@ -33,11 +33,11 @@ public class KeyboardStatus implements KeyListener {
 
         int keyCode = e.getKeyCode();
 
-        if      (keyCode == KeyEvent.VK_LEFT)  this.leftArrowKeyDown = false;
+        if      (keyCode == KeyEvent.VK_LEFT) this.leftArrowKeyDown = false;
         else if (keyCode == KeyEvent.VK_RIGHT) this.rightArrowKeyDown = false;
-        else if (keyCode == KeyEvent.VK_DOWN)  this.downArrowKeyDown = false;
+        else if (keyCode == KeyEvent.VK_DOWN) this.downArrowKeyDown = false;
         else if (keyCode == KeyEvent.VK_SHIFT) this.rotationKey1Down = false;
-        else if (keyCode == KeyEvent.VK_SPACE) this.rotationKey2Down = false;
+        else if (keyCode == KeyEvent.VK_CONTROL) this.rotationKey2Down = false;
         else if (keyCode == KeyEvent.VK_ENTER) this.pauseKeyDown = false;
     }
 

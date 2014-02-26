@@ -1,5 +1,6 @@
 package Tetris;
 
+import StartMenu.MainMenuWindow;
 import Tetris.DataTypes.*;
 import Tetris.Keyboard.*;
 import java.awt.Color;
@@ -8,6 +9,7 @@ import java.util.List;
 public class Tetris {
 
     private KeyboardFrontend kbFrontend;
+    private MainMenuWindow mainMenuWindow;
     private Clock clock;
     private GravityCounter gravityCounter;
     private ScoringSystem scoringSystem;
@@ -18,37 +20,37 @@ public class Tetris {
     private Tetromino tetromino;
     private TetrominoType currentTetrominoType;
     private TetrominoType nextTetrominoType;
+
+    private boolean gameIsOver = false;
+    private int framesSinceTetrominoAppearance;
     private List<Integer> rowsToClear;
 
-    private int framesSinceTetrominoAppearance;
     private int frameNumber = 0;
-    private long currentTime, lastTime;
-    private long totalTime = 0;
-    private boolean gameIsOver = false;
+    private long currentTime = 0, lastTime = 0, totalTime = 0;
 
-    public Tetris(int gravity) {
+    public Tetris(int gravity, MainMenuWindow wnd) {
 
         KeyboardStatus kbStatus = new KeyboardStatus();
 
         this.kbFrontend = new KeyboardFrontend(kbStatus);
+        this.mainMenuWindow = wnd;
         this.clock = new Clock(16);
         this.gravityCounter = new GravityCounter(gravity);
         this.scoringSystem = new ScoringSystem(gravity);
         this.randomizer = new TetrominoRandomizer();
         this.playfield = new Playfield();
-        this.gfxHandler = new GraphicsHandler(this.playfield, this.scoringSystem, kbStatus);
+        this.gfxHandler = new GraphicsHandler(playfield, scoringSystem, kbStatus);
     }
 
     public void letsPlay() {
 
-        this.gfxHandler.updateGravityLevel();
-        this.clock.waitAbsolute(1000);
-        this.gfxHandler.clearPlayfield();
+        gfxHandler.initializeGameWindow();
+        gfxHandler.updateGravityLevel();
+        clock.waitAbsolute(1000);
+        gfxHandler.clearPlayfield();
 
-        this.nextTetrominoType = TetrominoType.I;
-
-        this.clock.restart();
-        this.lastTime = System.nanoTime();
+        nextTetrominoType = randomizer.getRandomTetrominoType();
+        lastTime = System.nanoTime();
 
         while (true) {
 
@@ -56,36 +58,38 @@ public class Tetris {
             if (gameIsOver) break;
             tetrominoFreeMovement();
             tetrominoLocking();
-            if (this.rowsToClear.isEmpty()) continue;
-            showRowClearAnimation();
+            rowsToClear = playfield.getListOfFullRows();
+            if (!rowsToClear.isEmpty()) showRowClearAnimation();
         }
 
-        showGameOverScreen();
+        clock.waitAbsolute(500);
+        gfxHandler.showGameOverScreen();
 
         while (true) {
-            clock.waitAbsolute(100);
+            clock.waitAbsolute(50);
             if (kbFrontend.isPauseStateChangeTriggered() == true) break;
         }
-        gfxHandler.closeWindow();
+
+        gfxHandler.closeGameWindow();
+        mainMenuWindow.openWindow();
     }
 
     private void tetrominoAppearance() {
 
-        this.currentTetrominoType = this.nextTetrominoType;
-        this.nextTetrominoType = TetrominoType.I;
-        this.scoringSystem.addTetrominoToStats(this.currentTetrominoType);
-        this.tetromino = new Tetromino(this.currentTetrominoType, this.playfield);
+        waitForMultipleFrames(5);
 
-        for (int i=0; i<5; i++) {
-            waitForNextFrame();
-        }
+        currentTetrominoType = nextTetrominoType;
+        nextTetrominoType = randomizer.getRandomTetrominoType();
+        tetromino = new Tetromino(currentTetrominoType, playfield);
 
-        this.gfxHandler.updateNextTetromino(this.nextTetrominoType);
-        this.gfxHandler.updateTetrominoStats();
-        this.gfxHandler.updatePlayfieldContents(this.tetromino);
+        scoringSystem.addTetrominoToStats(currentTetrominoType);
+
+        gfxHandler.updateNextTetromino(nextTetrominoType);
+        gfxHandler.updateTetrominoStats();
+        gfxHandler.updatePlayfieldContents(tetromino);
 
         waitForNextFrame();
-        if (this.tetromino.detectCollisionsWithEnvironment() == true) this.gameIsOver = true;
+        if (tetromino.detectCollisionsWithEnvironment() == true) gameIsOver = true;
     }
 
     private void tetrominoFreeMovement() {
@@ -99,6 +103,7 @@ public class Tetris {
             gfxHandler.updatePlayfieldContents(tetromino);
             waitForNextFrame();
             framesSinceTetrominoAppearance++;
+            boolean hasDroppedInThisFrame = false;
 
             if (kbFrontend.isGamePaused() == true) pause();
 
@@ -110,7 +115,6 @@ public class Tetris {
 
                 case KeyboardFrontend.COUNTERCLOCKWISE:
                     tetromino.rotateCounterclockwise();
-                    break;
             }
 
             switch (kbFrontend.getMovementDirection()) {
@@ -124,14 +128,22 @@ public class Tetris {
                     break;
 
                 case KeyboardFrontend.DOWN:
-                    if (tetromino.stepDown() == false) return;
-                    else continue;
+                    boolean fellFreely = tetromino.stepDown();
+                    if (!fellFreely) return;
+                    hasDroppedInThisFrame = true;
             }
 
-            if (gravityCounter.shouldTetrominoFall() == true) {
-                if (kbFrontend.isSoftDropActive() == true) continue;
-                if (tetromino.stepDown() == false) return;
+            if (kbFrontend.isSoftDropActive() == true) {
+                gravityCounter.reset();
+                continue;
             }
+
+            if (gravityCounter.shouldTetrominoFall() == true && !hasDroppedInThisFrame) {
+                boolean fellFreely = tetromino.stepDown();
+                if (!fellFreely) return;
+            }
+
+            gravityCounter.tick();
         }
     }
 
@@ -139,75 +151,72 @@ public class Tetris {
 
         gfxHandler.updatePlayfieldContents(tetromino);
         gfxHandler.drawLockingTetromino(tetromino);
-        gfxHandler.updateWholeScreen();
 
-        Coordinate[] blockCoordinates = this.tetromino.getBlockCoordinates();
+        waitForMultipleFrames(8);
+
+        Coordinate[] blockCoordinates = tetromino.getBlockCoordinates();
+
         for (int i=0; i<4; i++) {
-            this.playfield.reserveCellForBlock(blockCoordinates[i].x, blockCoordinates[i].y, this.tetromino.getBlockType());
+            playfield.reserveCellForBlock(blockCoordinates[i].x, blockCoordinates[i].y, tetromino.getBlockType());
         }
 
-        this.tetromino = null;
-        this.scoringSystem.addFastDropBonusToScore(this.framesSinceTetrominoAppearance);
-        this.rowsToClear = this.playfield.getListOfFullRows();
+        tetromino = null;
 
-        for (int i=0; i<5; i++) {
-            waitForNextFrame();
-        }
-
-        this.gfxHandler.updateScore();
+        gfxHandler.updatePlayfieldContents(null);
+        scoringSystem.addFastDropBonusToScore(framesSinceTetrominoAppearance);
+        gfxHandler.updateScore();
+        waitForMultipleFrames(2);
     }
 
     private void showRowClearAnimation() {
 
-        int numRowsToClear = rowsToClear.size();
-
         for (int i=0; i<10; i++) {
-            this.gfxHandler.animateOneStepOfRowClearAnimation(i, this.rowsToClear);
-            if (numRowsToClear == 4 && i%2 == 0) gfxHandler.fillBackgroundWithColor(Color.WHITE);
-            for (int j=0; j<2; j++) waitForNextFrame();
-            if (numRowsToClear == 4 && i%2 == 0) gfxHandler.fillBackgroundWithColor(Color.BLACK);
-            for (int j=0; j<4; j++) waitForNextFrame();
+            gfxHandler.animateOneStepOfRowClearAnimation(i, rowsToClear);
+            waitForMultipleFrames(4);
         }
 
-        this.scoringSystem.addClearedRowsToScore(this.rowsToClear);
-        for (int i : this.rowsToClear) this.playfield.clearRow(i);
-        this.gfxHandler.updateScore();
-        this.gfxHandler.updateLineStats();
-        this.gfxHandler.updatePlayfieldContents(null);
+        playfield.clearFullRows();
+        gfxHandler.updatePlayfieldContents(null);
+
+        scoringSystem.addClearedRowsToScore(rowsToClear);
+        gfxHandler.updateScore();
+        gfxHandler.updateLineStats();
     }
 
-    private void showGameOverScreen() {
-        this.clock.waitAbsolute(500);
-        this.gfxHandler.showGameOverScreen();
-    }
-
-    public void pause() {
+    private void pause() {
 
         waitForNextFrame();
-        this.gfxHandler.showPauseScreen();
+        gfxHandler.showPauseScreen();
 
-        while (this.kbFrontend.isGamePaused() == true) {
+        while (kbFrontend.isGamePaused() == true) {
             waitForNextFrame();
         }
 
-        this.gfxHandler.clearPlayfield();
-        this.gfxHandler.updatePlayfieldContents(this.tetromino);
+        gfxHandler.clearPlayfield();
+        gfxHandler.updatePlayfieldContents(tetromino);
         waitForNextFrame();
+    }
+
+    private void waitForMultipleFrames(int numFrames) {
+
+        for (int i=0; i<numFrames; i++) {
+            waitForNextFrame();
+        }
     }
 
     private void waitForNextFrame() {
 
-        this.clock.waitAbsolute(15);
+        clock.waitAbsolute(10);
 
-        this.frameNumber++;
-        this.currentTime = System.nanoTime();
-        this.totalTime += this.currentTime - this.lastTime;
-        this.lastTime = this.currentTime;
+        frameNumber++;
+        currentTime = System.nanoTime();
+        totalTime += currentTime-lastTime;
+        lastTime = currentTime;
 
-        if (this.frameNumber == 30) {
-            this.gfxHandler.updateFPS(30000000000.0/this.totalTime);
-            this.frameNumber = 0;
-            this.totalTime = 0;
+        if (frameNumber == 30) {
+            gfxHandler.updateFPS(30000000000.0/totalTime);
+            frameNumber = 0;
+            totalTime = 0;
         }
     }
 }
