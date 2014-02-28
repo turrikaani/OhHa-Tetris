@@ -11,6 +11,11 @@ public class KeyboardFrontend {
     public static final int COUNTERCLOCKWISE = 2;
     public static final int NEITHER = 0;
 
+    private final int AUTOREPEAT_THRESHOLD = 16;
+    private final int AUTOREPEAT_INTERVAL = 5;
+    private final int SOFTDROP_THRESHOLD = 4;
+    private final int SOFTDROP_INTERVAL = 2;
+
     private int leftArrowKeyDownTime;
     private int rightArrowKeyDownTime;
     private int downArrowKeyDownTime;
@@ -20,12 +25,21 @@ public class KeyboardFrontend {
     private boolean pauseKeyDownInLastFrame;
 
     private boolean gamePaused = false;
-
     private KeyboardStatus kbStatus;
 
     public KeyboardFrontend(KeyboardStatus k) {
         this.kbStatus = k;
         resetState();
+    }
+
+    public void resetState() {
+
+        leftArrowKeyDownTime = 0;
+        rightArrowKeyDownTime = 0;
+        downArrowKeyDownTime = 0;
+        rotationKey1DownInLastFrame = true;
+        rotationKey2DownInLastFrame = true;
+        pauseKeyDownInLastFrame = true;
     }
 
     public int getMovementDirection() {
@@ -39,7 +53,12 @@ public class KeyboardFrontend {
             downArrowKeyDownTime = 0;
 
             if (leftArrowKeyDownTime == 1) return LEFT;
-            if (leftArrowKeyDownTime > 16 && (leftArrowKeyDownTime-16) % 6 == 1) return LEFT;
+
+            if (leftArrowKeyDownTime > AUTOREPEAT_THRESHOLD &&
+                (leftArrowKeyDownTime - AUTOREPEAT_THRESHOLD) % AUTOREPEAT_INTERVAL == 1)
+            {
+                return LEFT;
+            }
             else return NONE;
         }
 
@@ -50,7 +69,12 @@ public class KeyboardFrontend {
             downArrowKeyDownTime = 0;
 
             if (rightArrowKeyDownTime == 1) return RIGHT;
-            if (rightArrowKeyDownTime > 16 && (rightArrowKeyDownTime-16) % 6 == 1) return RIGHT;
+
+            if (rightArrowKeyDownTime > AUTOREPEAT_THRESHOLD &&
+                (rightArrowKeyDownTime - AUTOREPEAT_THRESHOLD) % AUTOREPEAT_INTERVAL == 1)
+            {
+                return RIGHT;
+            }
             else return NONE;
         }
 
@@ -60,7 +84,11 @@ public class KeyboardFrontend {
             rightArrowKeyDownTime = 0;
             downArrowKeyDownTime++;
 
-            if (downArrowKeyDownTime > 4 && (downArrowKeyDownTime-4) % 2 == 1) return DOWN;
+            if (downArrowKeyDownTime > SOFTDROP_THRESHOLD &&
+                (downArrowKeyDownTime - SOFTDROP_THRESHOLD) % SOFTDROP_INTERVAL == 1)
+            {
+                return DOWN;
+            }
             else return NONE;
         }
 
@@ -71,6 +99,12 @@ public class KeyboardFrontend {
             downArrowKeyDownTime = 0;
             return NONE;
         }
+    }
+
+    public boolean isSoftDropActive() {
+
+        if (downArrowKeyDownTime > SOFTDROP_THRESHOLD) return true;
+        else return false;
     }
 
     public int getRotationDirection() {
@@ -118,21 +152,5 @@ public class KeyboardFrontend {
 
         pauseKeyDownInLastFrame = isPauseKeyDownNow;
         return isTriggered;
-    }
-
-    public boolean isSoftDropActive() {
-
-        if (downArrowKeyDownTime > 4) return true;
-        else return false;
-    }
-
-    public void resetState() {
-
-        leftArrowKeyDownTime = 0;
-        rightArrowKeyDownTime = 0;
-        downArrowKeyDownTime = 0;
-        rotationKey1DownInLastFrame = true;
-        rotationKey2DownInLastFrame = true;
-        pauseKeyDownInLastFrame = true;
     }
 }

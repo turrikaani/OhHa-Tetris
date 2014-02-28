@@ -46,7 +46,7 @@ public class Tetris {
 
         gfxHandler.initializeGameWindow();
         gfxHandler.updateGravityLevel();
-        clock.waitAbsolute(1000);
+        clock.waitMilliseconds(1000);
         gfxHandler.clearPlayfield();
 
         nextTetrominoType = randomizer.getRandomTetrominoType();
@@ -62,11 +62,11 @@ public class Tetris {
             if (!rowsToClear.isEmpty()) showRowClearAnimation();
         }
 
-        clock.waitAbsolute(500);
+        clock.waitMilliseconds(500);
         gfxHandler.showGameOverScreen();
 
         while (true) {
-            clock.waitAbsolute(50);
+            clock.waitMilliseconds(50);
             if (kbFrontend.isPauseStateChangeTriggered() == true) break;
         }
 
@@ -206,7 +206,7 @@ public class Tetris {
 
     private void waitForNextFrame() {
 
-        clock.waitAbsolute(10);
+        clock.waitMilliseconds(10);
 
         frameNumber++;
         currentTime = System.nanoTime();

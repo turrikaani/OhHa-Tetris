@@ -16,7 +16,7 @@ public class Clock {
         this.lastTime = System.nanoTime();
     }
 
-    public void waitRelative() {
+    public void waitRelativeToPreviousCall() {
 
         while (true) {
 
@@ -26,11 +26,11 @@ public class Clock {
                 this.lastTime = currentTime;
                 return;
             }
-            else waitAbsolute(1);
+            else waitMilliseconds(1);
         }
     }
 
-    public void waitAbsolute(long millisecsToWait) {
+    public void waitMilliseconds(long millisecsToWait) {
 
         if (millisecsToWait < 1) millisecsToWait = 1;
 

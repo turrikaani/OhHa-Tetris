@@ -2,9 +2,9 @@ package Tetris;
 
 import Tetris.DataTypes.*;
 import Tetris.GUI.*;
-import Tetris.Keyboard.KeyboardStatus;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.SwingUtilities;
@@ -23,7 +23,7 @@ public class GraphicsHandler {
     private BufferedImage[] blockImages;
     private BufferedImage[] tetrominoImages;
 
-    public GraphicsHandler(Playfield p, ScoringSystem s, KeyboardStatus k) {
+    public GraphicsHandler(Playfield p, ScoringSystem s, KeyListener k) {
 
         this.playfield = p;
         this.scoringSystem = s;
@@ -75,7 +75,7 @@ public class GraphicsHandler {
     public void initializeGameWindow() {
 
         painter.drawImage(backgroundImage, 0, 0, null);
-        this.frontBuffer.repaint();
+        frontBuffer.repaint();
     }
 
     public void updateScore() {
@@ -188,26 +188,54 @@ public class GraphicsHandler {
 
     public void animateOneStepOfRowClearAnimation(int stepNumber, List<Integer> rowsToBeCleared) {
 
+        if (stepNumber < 0 || stepNumber > 9) return;
+
         for (int i : rowsToBeCleared) {
-            if (i%2 == 0) drawBlock(stepNumber, i, BlockType.EMPTY);
+
+            if (i < 0 || i >= 20) continue;
+
+            if (i % 2 == 0) drawBlock(stepNumber, i, BlockType.EMPTY);
             else drawBlock(9-stepNumber, i, BlockType.EMPTY);
         }
+
         frontBuffer.repaint(346, 50, 270, 540);
     }
 
     public void showPauseScreen() {
-        painter.drawImage(this.pauseScreen, 346, 50, null);
+        painter.drawImage(pauseScreen, 346, 50, null);
         frontBuffer.repaint(346, 50, 270, 540);
     }
 
     public void showGameOverScreen() {
-        painter.drawImage(this.gameOverScreen, 391, 231, null);
+        painter.drawImage(gameOverScreen, 391, 231, null);
         frontBuffer.repaint(391, 231, 179, 69);
     }
 
     public void closeGameWindow() {
         SwingUtilities.getWindowAncestor(frontBuffer).dispose();
     }
+
+/*
+    public void fillUnusedWindowPortionsWithColor(Color c) {
+
+        painter.setColor(c);
+        painter.fillRect(  0,   0,  24, 640);
+        painter.fillRect(235,   0,  78, 640);
+        painter.fillRect(648,   0,  77, 640);
+        painter.fillRect(936,   0,  24, 640);
+        painter.fillRect( 24,   0, 211,  20);
+        painter.fillRect( 24, 140, 211,   9);
+        painter.fillRect( 24, 425, 211,  10);
+        painter.fillRect( 24, 529, 211,  10);
+        painter.fillRect( 24, 620, 211,  20);
+        painter.fillRect(313,   0, 335,  18);
+        painter.fillRect(313, 622, 335,  18);
+        painter.fillRect(725,   0, 211,  20);
+        painter.fillRect(725, 153, 211,   9);
+        painter.fillRect(725, 620, 211,  20);
+        frontBuffer.repaint();
+    }
+*/
 
     private void clearArea(int upperLeftX, int upperLeftY, int width, int height) {
 
@@ -255,25 +283,5 @@ public class GraphicsHandler {
             case T : return 5;
             default: return 6;
         }
-    }
-
-    public void fillBackgroundWithColor(Color c) {
-
-        painter.setColor(c);
-        painter.fillRect(  0,   0,  24, 640);
-        painter.fillRect(235,   0,  78, 640);
-        painter.fillRect(648,   0,  77, 640);
-        painter.fillRect(936,   0,  24, 640);
-        painter.fillRect( 24,   0, 211,  20);
-        painter.fillRect( 24, 140, 211,   9);
-        painter.fillRect( 24, 425, 211,  10);
-        painter.fillRect( 24, 529, 211,  10);
-        painter.fillRect( 24, 620, 211,  20);
-        painter.fillRect(313,   0, 335,  18);
-        painter.fillRect(313, 622, 335,  18);
-        painter.fillRect(725,   0, 211,  20);
-        painter.fillRect(725, 153, 211,   9);
-        painter.fillRect(725, 620, 211,  20);
-        frontBuffer.repaint();
     }
 }

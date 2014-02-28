@@ -159,4 +159,16 @@ public class PlayfieldTest {
         assertEquals(0, rivit.size());
         assertEquals(BlockType.EMPTY, this.playfield.getCellType(8, 21));
     }
+    
+    @Test
+    public void methodClearFullRowsWorks() {
+        for (int i=0; i<22; i++) {
+            fillRow(i);
+        }
+        List<Integer> fullRows = this.playfield.getListOfFullRows();
+        assertEquals(22, fullRows.size());
+        this.playfield.clearFullRows();
+        fullRows = this.playfield.getListOfFullRows();
+        assertEquals(0, fullRows.size());
+    }
 }

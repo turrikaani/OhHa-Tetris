@@ -6,7 +6,7 @@ public class GravityTable {
 
     public static int getGravityDropFrequencyInFrames(int level) {
 
-        if (level < 1 || level > 10) return gTable[0];
-        else return gTable[level-1];
+        if (level < 1 || level > 10) level = 5;
+        return gTable[level-1];
     }
 }

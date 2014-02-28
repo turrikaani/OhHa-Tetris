@@ -58,9 +58,14 @@
               <version>0.30</version>
               <configuration>
                   <targetClasses>
-                      <param>Tetris.Playfield*</param>
-                      <param>Tetris.Tetromino*</param>
+                      <param>Tetris.Keyboard*</param>
                       <param>Tetris.BlockCoordinates*</param>
+                      <param>Tetris.GravityCounter*</param>
+                      <param>Tetris.GravityTable*</param>
+                      <param>Tetris.Playfield*</param>
+                      <param>Tetris.ScoringSystem*</param>
+                      <param>Tetris.Tetromino*</param>
+                      <param>Tetris.TetrominoRandomizer*</param>
                   </targetClasses>
               </configuration>
           </plugin>

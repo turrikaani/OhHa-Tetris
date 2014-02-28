@@ -25,7 +25,7 @@ public class ScoringSystem {
 
     public ScoringSystem(int gravityLevel) {
 
-        if (gravityLevel < 1 || gravityLevel > 10) this.gravityLevel = 1;
+        if (gravityLevel < 1 || gravityLevel > 10) this.gravityLevel = 5;
         else this.gravityLevel = gravityLevel;
     }
 
