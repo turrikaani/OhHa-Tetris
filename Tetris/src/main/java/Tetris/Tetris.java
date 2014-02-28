@@ -206,7 +206,7 @@ public class Tetris {
 
     private void waitForNextFrame() {
 
-        clock.waitMilliseconds(10);
+        clock.waitRelativeToPreviousCall();
 
         frameNumber++;
         currentTime = System.nanoTime();

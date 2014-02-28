@@ -108,10 +108,10 @@ public class GravitySelectionWindow implements Runnable, ActionListener {
         }
     }
 
-    public void openWindow(int defaultChoice) {
+    public void openWindow(int currentChoice) {
 
-        gravityLevelChoice = defaultChoice;
-        radioButtons[defaultChoice-1].setSelected(true);
+        gravityLevelChoice = currentChoice;
+        radioButtons[currentChoice-1].setSelected(true);
         window.setVisible(true);
     }
 

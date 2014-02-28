@@ -1,3 +1,0 @@
-- Ohjelmoinnin harjoitustyö 2014, periodi III -
-
-15.1.	4h	Tuntikirjanpito aloitettu, luettu Tetris-wikiä, aiheen kuvaus laadittu...
