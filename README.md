@@ -1,3 +1,2 @@
 OhHa-Tetris
 ===========
-Tänne tulee ehkä jotain dokumentaatiota...
